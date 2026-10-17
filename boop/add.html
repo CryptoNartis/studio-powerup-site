@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Be my friend in Boop the Blob</title>
+<meta name="description" content="A friend invited you to Boop the Blob. Open the game to say yes.">
+<meta property="og:title" content="Be my friend in Boop the Blob!">
+<meta property="og:description" content="Tap to open Boop and send a friend request.">
+<meta property="og:image" content="https://games.studio-powerup.com/boop/icon-256.png">
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" href="icon-256.png">
+<style>
+  /* the friend-link landing page: opens the game on the friend request (boop://add/CODE), with the code to type as a fallback */
+  .invite { max-width: 420px; margin: 28px auto 40px; text-align: center; }
+  .invite .card { background: var(--card); border-radius: 28px; padding: 28px 22px 24px; box-shadow: 0 10px 30px rgba(42,31,79,.12); }
+  .invite img { width: 112px; height: 112px; border-radius: 26px; display: block; margin: -84px auto 10px; box-shadow: 0 8px 24px rgba(255,79,163,.35); }
+  .invite h1 { font-size: 26px; line-height: 1.2; margin: 0 0 6px; }
+  .invite p { color: var(--muted); margin: 0 0 18px; }
+  .code { display: inline-block; font-weight: 800; font-size: 34px; letter-spacing: 6px; padding: 8px 18px 8px 24px; border-radius: 18px; background: var(--line); color: var(--pink); margin: 4px 0 18px; }
+  .go { display: block; width: 100%; padding: 16px; border: 0; border-radius: 999px; background: var(--pink); color: #fff; font: inherit; font-weight: 800; font-size: 19px; text-decoration: none; box-shadow: 0 6px 0 #c2185b; }
+  .go:active { transform: translateY(3px); box-shadow: 0 3px 0 #c2185b; }
+  .alt { display: block; margin-top: 14px; font-size: 15px; }
+  .steps { text-align: left; font-size: 15px; color: var(--muted); margin: 22px 4px 0; padding-left: 20px; }
+  .steps b { color: var(--ink); }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../"><span class="mark" aria-hidden="true">👾</span>Pocket Gremlin</a>
+  </div>
+</header>
+<main class="wrap invite">
+  <div class="card">
+    <img src="icon-256.png" alt="Boop, a pink blob with a happy face" width="112" height="112">
+    <h1 id="t">Be my friend in Boop the Blob!</h1>
+    <p id="s">Open Boop and we’re friends.</p>
+    <div class="code" id="code" aria-label="Friend code">······</div>
+    <a class="go" id="open" href="boop://friends">Open Boop</a>
+    <a class="alt" id="get" href="https://apps.apple.com/app/id6819026923">Don’t have Boop yet? Get it on the App Store</a>
+    <ol class="steps">
+      <li id="s1">Tap <b>Get it on the App Store</b>: we copy your invite.</li>
+      <li id="s2">Open Boop and tap <b>Paste invite</b>. You’re friends right away!</li>
+    </ol>
+  </div>
+</main>
+<script>
+(function(){
+  var q = new URLSearchParams(location.search), c = String(q.get('c') || q.get('invite') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
+  var fr = /^fr/i.test(navigator.language || ''), $ = function(id){ return document.getElementById(id); };
+  if (fr){ document.documentElement.lang = 'fr';
+    $('t').textContent = 'Sois mon ami dans Boop the Blob !'; $('s').textContent = 'Ouvre Boop et on est amis.';
+    $('open').textContent = 'Ouvrir Boop'; $('get').textContent = 'Pas encore Boop ? Télécharge-le sur l’App Store';
+    $('s1').innerHTML = 'Touche <b>Télécharge-le sur l’App Store</b> : on copie ton invitation.';
+    $('s2').innerHTML = 'Ouvre Boop et touche <b>Coller l’invitation</b>. Vous êtes amis tout de suite !'; }
+  if (c.length !== 6) return;
+  $('code').textContent = c; $('open').href = 'boop://add/' + c;
+  setTimeout(function(){ location.href = 'boop://add/' + c; }, 300); // opens the game right away when it is installed
+  // not installed: the App Store drops the link, so the invite goes to the clipboard and Boop asks to paste it on the first screens
+  $('get').addEventListener('click', function(){ try { navigator.clipboard.writeText('Boop invite ' + c); } catch(e){} });
+})();
+</script>
+</body>
+</html>
